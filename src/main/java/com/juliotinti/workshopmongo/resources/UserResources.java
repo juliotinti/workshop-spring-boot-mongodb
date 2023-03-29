@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.juliotinti.workshopmongo.domain.User;
+import com.juliotinti.workshopmongo.dto.UserDTO;
 import com.juliotinti.workshopmongo.services.UserService;
 
 @RestController
@@ -19,9 +20,10 @@ public class UserResources {
 	private UserService service; 
 	
 	@RequestMapping(method=RequestMethod.GET) //é igual ao @GetMapping, garantindo o Get no postman
-	public ResponseEntity<List<User>> findAll(){
+	public ResponseEntity<List<UserDTO>> findAll(){
 		List<User> list = service.findAll();
-		return ResponseEntity.ok().body(list);
+		List<UserDTO> listDTO = list.stream().map(x -> new UserDTO(x)).toList();
+		return ResponseEntity.ok().body(listDTO);
 	}
 	
 }
