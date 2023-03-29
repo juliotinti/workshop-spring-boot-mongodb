@@ -1,9 +1,12 @@
 package com.juliotinti.workshopmongo.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="user") //para dizer que essa classe corresponde a uma coleção lá do MongoDB, se eu n colocar o que está no parenteses, ele vai procurar pelo nome da classe em minusculo por padrao
@@ -14,6 +17,10 @@ public class User implements Serializable{
 	private String id;
 	private String name;
 	private String email;
+	
+	//o lazy = true diz que eu so vou carregar os post do usuário quando eu explicitamente acessá-los, para n ter trafego de info a toa
+	@DBRef(lazy = true) //isso serve para referenciar esse atributo a uma outra coleção do mongoDB
+	private List<Post> posts = new ArrayList<>();
 	
 	public User() {
 	}
@@ -47,7 +54,15 @@ public class User implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public List<Post> getPosts() {
+		return posts;
+	}
 
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -64,5 +79,6 @@ public class User implements Serializable{
 		User other = (User) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
+
 }
